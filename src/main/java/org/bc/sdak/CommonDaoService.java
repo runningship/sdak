@@ -1,7 +1,10 @@
 package org.bc.sdak;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.bc.sdak.utils.LogUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -40,6 +43,28 @@ public class CommonDaoService {
 		return (T)getCurrentSession().get(clazz, id);
 	}
 	
+	@Transactional
+	public <T> T getUnique(Class<T> clazz,Object obj){
+		List<String> keys = new ArrayList<String>();
+		List<Object> values = new ArrayList<Object>();
+		for(Field f : Object.class.getDeclaredFields()){
+			f.setAccessible(true);
+			Object value =  null;
+			try {
+				value = f.get(obj);
+			} catch (Exception e) {
+				LogUtil.warning("get property["+f.getName()+"] value fail for bean "+clazz.getName());
+				continue;
+			}
+			if(obj==null){
+				continue;
+			}
+			keys.add(f.getName());
+			values.add(value);
+		}
+		return getUniqueByParams(clazz,"from "+clazz.getSimpleName(),keys.toArray(new String[]{}),values.toArray());
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Transactional
 	public <T> List<T> listByParams(Class<T> clazz,String hql,String[] keys, Object[] values){
@@ -49,12 +74,6 @@ public class CommonDaoService {
 			for(int i=0;i<keys.length;i++){
 				query.setParameter(keys[i], values[i]);
 			}
-		}
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		return query.list();
 	}
