@@ -28,7 +28,6 @@ public class TransactionalServiceHelper implements MethodInterceptor{
 		return (T) enhancer.create();
 	}
 
-	@Override
 	public Object intercept(Object obj, Method method, Object[] args,MethodProxy target) throws Throwable {
 		boolean needTransaction = method.getAnnotation(Transactional.class)==null ? false:true;
 		if(needTransaction == false){

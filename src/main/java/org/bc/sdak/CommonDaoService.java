@@ -38,7 +38,6 @@ public class CommonDaoService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Transactional
 	public <T> T get(Class<T> clazz,String id){
 		return (T)getCurrentSession().get(clazz, id);
 	}
@@ -47,7 +46,8 @@ public class CommonDaoService {
 	public <T> T getUnique(Class<T> clazz,Object obj){
 		List<String> keys = new ArrayList<String>();
 		List<Object> values = new ArrayList<Object>();
-		for(Field f : Object.class.getDeclaredFields()){
+		String hql = "from "+obj.getClass().getSimpleName()+" where 1=1 ";
+		for(Field f : obj.getClass().getDeclaredFields()){
 			f.setAccessible(true);
 			Object value =  null;
 			try {
@@ -56,17 +56,18 @@ public class CommonDaoService {
 				LogUtil.warning("get property["+f.getName()+"] value fail for bean "+clazz.getName());
 				continue;
 			}
-			if(obj==null){
+			if(value==null){
 				continue;
 			}
 			keys.add(f.getName());
 			values.add(value);
+			hql += " and "+f.getName()+"=:"+f.getName();
 		}
-		return getUniqueByParams(clazz,"from "+clazz.getSimpleName(),keys.toArray(new String[]{}),values.toArray());
+		return getUniqueByParams(clazz,hql,keys.toArray(new String[]{}),values.toArray());
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Transactional
+	@SuppressWarnings("unchecked")
 	public <T> List<T> listByParams(Class<T> clazz,String hql,String[] keys, Object[] values){
 		Session session = getCurrentSession();
 		Query query = session.createQuery(hql);
@@ -87,6 +88,7 @@ public class CommonDaoService {
 		return (T) list.get(0);
 	}
 	
+	@Transactional
 	public <T> T getUniqueByKeyValue(Class<T> clazz,String field,Object value){
 		return getUniqueByParams(clazz,"from "+clazz.getSimpleName() + " where "+ field +" = :"+field, new String[]{field} , new Object[]{value});
 		
