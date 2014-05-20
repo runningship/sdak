@@ -1,5 +1,6 @@
 package org.bc.sdak;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,8 @@ public class CommonDaoService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T> T get(Class<T> clazz,String id){
+	@Transactional
+	public <T> T get(Class<T> clazz,Serializable id){
 		return (T)getCurrentSession().get(clazz, id);
 	}
 	
@@ -46,7 +48,7 @@ public class CommonDaoService {
 	public <T> T getUnique(Class<T> clazz,Object obj){
 		List<String> keys = new ArrayList<String>();
 		List<Object> values = new ArrayList<Object>();
-		String hql = "from "+obj.getClass().getSimpleName()+" where 1=1 ";
+//		String hql = "from "+obj.getClass().getSimpleName()+" where 1=1 ";
 		for(Field f : obj.getClass().getDeclaredFields()){
 			f.setAccessible(true);
 			Object value =  null;
@@ -59,11 +61,14 @@ public class CommonDaoService {
 			if(value==null){
 				continue;
 			}
+			if("".equals(String.valueOf(value))){
+				continue;
+			}
 			keys.add(f.getName());
 			values.add(value);
-			hql += " and "+f.getName()+"=:"+f.getName();
+//			hql += " and "+f.getName()+"=:"+f.getName();
 		}
-		return getUniqueByParams(clazz,hql,keys.toArray(new String[]{}),values.toArray());
+		return getUniqueByParams(clazz,keys.toArray(new String[]{}),values.toArray());
 	}
 	
 	@Transactional
@@ -80,8 +85,12 @@ public class CommonDaoService {
 	}
 	
 	@Transactional
-	public <T> T getUniqueByParams(Class<T> clazz,String hql,String[] keys,Object[] values){
-		List<T> list = listByParams(clazz,hql,keys,values);
+	public <T> T getUniqueByParams(Class<T> clazz,String[] keys,Object[] values){
+		StringBuilder sb  = new StringBuilder("from "+clazz.getSimpleName() + " where 1=1 ");
+		for(int i=0;i<keys.length;i++){
+			sb.append(" and ").append(keys[i]).append("=:").append(keys[i]);
+		}
+		List<T> list = listByParams(clazz,sb.toString(),keys,values);
 		if(list==null || list.size()==0){
 			return null;
 		}
@@ -89,8 +98,21 @@ public class CommonDaoService {
 	}
 	
 	@Transactional
+	public <T> List<T> listByParams(Class<T> clazz,String[] keys,Object[] values){
+		StringBuilder sb  = new StringBuilder("from "+clazz.getSimpleName() + " where 1=1 ");
+		for(int i=0;i<keys.length;i++){
+			sb.append(" and ").append(keys[i]).append("=:").append(keys[i]);
+		}
+		List<T> list = listByParams(clazz,sb.toString(),keys,values);
+		if(list==null || list.size()==0){
+			return null;
+		}
+		return list;
+	}
+	
+	@Transactional
 	public <T> T getUniqueByKeyValue(Class<T> clazz,String field,Object value){
-		return getUniqueByParams(clazz,"from "+clazz.getSimpleName() + " where "+ field +" = :"+field, new String[]{field} , new Object[]{value});
+		return getUniqueByParams(clazz,new String[]{field} , new Object[]{value});
 		
 	}
 	

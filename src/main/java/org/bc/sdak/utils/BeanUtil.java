@@ -29,4 +29,14 @@ public class BeanUtil {
 		sb.append("]");
 		return sb.toString();
 	}
+	
+	public static void setFieldValue(Object obj ,String field,String value){
+		try {
+			Field f = obj.getClass().getDeclaredField(field);
+			f.setAccessible(true);
+			f.set(obj, value);
+		} catch (Exception e) {
+			LogUtil.warning("set "+value+" to "+obj.getClass().getName()+"."+field+" failed."+e.getMessage());
+		}
+	}
 }
