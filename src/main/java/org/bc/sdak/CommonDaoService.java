@@ -116,6 +116,58 @@ public class CommonDaoService {
 		
 	}
 	
+	public <T> Page<T> findPage(Page<T> page, String hql, Object... values)
+	  {
+		Session session= getCurrentSession();
+	    Query q = createQuery(session,hql, values);
+	    if (page.isAutoCount()) {
+	      long totalCount = countHqlResult(hql, values);
+	      page.setTotalCount(totalCount);
+	    }
+	    q.setFirstResult(page.getFirstOfPage() - 1);
+	    q.setMaxResults(page.getPageSize());
+	    page.setResult(q.list());
+	    session.close();
+	    return page;
+	  }
+	
+	public long countHqlResult(String hql, Object... values)
+	  {
+	    Long count = Long.valueOf(0L);
+	    String fromHql = hql;
+	    int fromIndex = fromHql.indexOf("from");
+	    int orderIndex = fromHql.indexOf("order by");
+	    fromHql = fromHql.substring(fromIndex+4, orderIndex);
+//	    fromHql = "from " + StringUtils.substringAfter(fromHql, "from");
+//	    fromHql = StringUtils.substringBefore(fromHql, "order by");
+
+	    String countHql = "select count(*) from " + fromHql;
+	    Session session= getCurrentSession();
+	    try
+	    {
+	      count = (Long)createQuery(session,countHql, values).uniqueResult();
+	    } catch (Exception e) {
+	      throw new RuntimeException("hql can't be auto count, hql is:" + countHql, e);
+	    }finally{
+	    	session.close();
+	    }
+	    if(count==null){
+	    	return 0;
+	    }
+	    return count.longValue();
+	  }
+	
+	private Query createQuery(Session session,String queryString, Object... values)
+	  {
+	    Query query = session.createQuery(queryString);
+	    if (values != null) {
+	      for (int i = 0; i < values.length; ++i) {
+	        query.setParameter(i, values[i]);
+	      }
+	    }
+	    return query;
+	  }
+	
 	private Session getCurrentSession(){
 		return SessionFactoryBuilder.buildOrGet().getCurrentSession();
 	}
