@@ -100,8 +100,10 @@ public class CommonDaoService {
 	@Transactional
 	public <T> List<T> listByParams(Class<T> clazz,String[] keys,Object[] values){
 		StringBuilder sb  = new StringBuilder("from "+clazz.getSimpleName() + " where 1=1 ");
-		for(int i=0;i<keys.length;i++){
-			sb.append(" and ").append(keys[i]).append("=:").append(keys[i]);
+		if(keys!=null && values!=null){
+			for(int i=0;i<keys.length;i++){
+				sb.append(" and ").append(keys[i]).append("=:").append(keys[i]);
+			}
 		}
 		List<T> list = listByParams(clazz,sb.toString(),keys,values);
 		if(list==null || list.size()==0){
