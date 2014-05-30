@@ -106,8 +106,8 @@ public class CommonDaoService {
 			}
 		}
 		List<T> list = listByParams(clazz,sb.toString(),keys,values);
-		if(list==null || list.size()==0){
-			return null;
+		if(list==null ){
+			return new ArrayList<T>();
 		}
 		return list;
 	}
@@ -118,6 +118,7 @@ public class CommonDaoService {
 		
 	}
 	
+	@Transactional
 	public <T> Page<T> findPage(Page<T> page, String hql, Object... values)
 	  {
 		Session session= getCurrentSession();
@@ -129,29 +130,30 @@ public class CommonDaoService {
 	    q.setFirstResult(page.getFirstOfPage() - 1);
 	    q.setMaxResults(page.getPageSize());
 	    page.setResult(q.list());
-	    session.close();
 	    return page;
 	  }
 	
+	@Transactional
 	public long countHqlResult(String hql, Object... values)
 	  {
 	    Long count = Long.valueOf(0L);
 	    String fromHql = hql;
 	    int fromIndex = fromHql.indexOf("from");
 	    int orderIndex = fromHql.indexOf("order by");
-	    fromHql = fromHql.substring(fromIndex+4, orderIndex);
+	    fromHql = fromHql.substring(fromIndex);
+	    if(orderIndex!=-1){
+	    	fromHql = fromHql.substring(0,orderIndex);
+	    }
 //	    fromHql = "from " + StringUtils.substringAfter(fromHql, "from");
 //	    fromHql = StringUtils.substringBefore(fromHql, "order by");
 
-	    String countHql = "select count(*) from " + fromHql;
+	    String countHql = "select count(*) " + fromHql;
 	    Session session= getCurrentSession();
 	    try
 	    {
 	      count = (Long)createQuery(session,countHql, values).uniqueResult();
 	    } catch (Exception e) {
 	      throw new RuntimeException("hql can't be auto count, hql is:" + countHql, e);
-	    }finally{
-	    	session.close();
 	    }
 	    if(count==null){
 	    	return 0;

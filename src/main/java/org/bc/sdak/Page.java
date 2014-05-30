@@ -7,6 +7,9 @@ public class Page<T> {
 	public static final String ASC = "asc";
 	  public static final String DESC = "desc";
 	  public static int DEFAULT_PAGE_SIZE = 10;
+	  /**
+	   * 当前页数，从1开始
+	   */
 	  protected int currentPageNo;
 	  protected int pageSize;
 	  protected List<T> result;
@@ -14,7 +17,7 @@ public class Page<T> {
 	  protected boolean autoCount;
 	  protected String pageUrl;
 	  protected String formName;
-	  private long start;
+//	  private long start;
 	  protected String orderBy;
 	  protected String order;
 
@@ -64,7 +67,7 @@ public class Page<T> {
 	    this(DEFAULT_PAGE_SIZE);
 	  }
 
-	  public Page(long start, long totalSize, int pageSize, List<T> data)
+	  public Page(long totalSize, int pageSize, List<T> data)
 	  {
 	    this.currentPageNo = 1;
 
@@ -82,7 +85,6 @@ public class Page<T> {
 	    this.order = null;
 
 	    this.pageSize = pageSize;
-	    this.start = start;
 	    this.totalCount = totalSize;
 	    this.result = data;
 	  }
@@ -162,14 +164,14 @@ public class Page<T> {
 	    this.pageUrl = pageUrl;
 	  }
 
-	  public long getStart()
-	  {
-	    return this.start;
-	  }
+//	  public long getStart()
+//	  {
+//	    return this.start;
+//	  }
 
-	  public void setStart(long start) {
-	    this.start = start;
-	  }
+//	  public void setStart(long start) {
+//	    this.start = start;
+//	  }
 
 	  public String getOrderBy() {
 	    return this.orderBy;
