@@ -5,203 +5,150 @@ import java.util.List;
 
 public class Page<T> {
 	public static final String ASC = "asc";
-	  public static final String DESC = "desc";
-	  public static int DEFAULT_PAGE_SIZE = 10;
-	  /**
-	   * 当前页数，从1开始
-	   */
-	  protected int currentPageNo;
-	  protected int pageSize;
-	  protected List<T> result;
-	  protected long totalCount;
-	  protected boolean autoCount;
-	  protected String pageUrl;
-	  protected String formName;
-//	  private long start;
-	  protected String orderBy;
-	  protected String order;
+	public static final String DESC = "desc";
+	public static int DEFAULT_PAGE_SIZE = 10;
+	/**
+	 * 当前页数，从1开始
+	 */
+	protected int currentPageNo;
+	protected int pageSize;
+	protected List<T> result;
+	protected long totalCount;
+	protected boolean autoCount;
+	protected String pageUrl;
 
-	  public Page(int pageSize)
-	  {
-	    this.currentPageNo = 1;
+	public Page(int pageSize) {
+		this.currentPageNo = 1;
 
-	    this.pageSize = DEFAULT_PAGE_SIZE;
+		this.pageSize = DEFAULT_PAGE_SIZE;
 
-	    this.result = Collections.emptyList();
+		this.result = Collections.emptyList();
 
-	    this.totalCount = -1L;
+		this.totalCount = -1L;
 
-	    this.autoCount = true;
+		this.autoCount = true;
 
-	    this.pageUrl = "errorPage.jsp";
+		this.pageUrl = "errorPage.jsp";
 
-	    this.orderBy = null;
-	    this.order = null;
+		setPageSize(pageSize);
+	}
 
-	    setPageSize(pageSize);
-	  }
+	public Page(int pageSize, boolean autoCount) {
+		this.currentPageNo = 1;
 
-	  public Page(int pageSize, boolean autoCount)
-	  {
-	    this.currentPageNo = 1;
+		this.pageSize = DEFAULT_PAGE_SIZE;
 
-	    this.pageSize = DEFAULT_PAGE_SIZE;
+		this.result = Collections.emptyList();
 
-	    this.result = Collections.emptyList();
+		this.totalCount = -1L;
 
-	    this.totalCount = -1L;
+		this.autoCount = true;
 
-	    this.autoCount = true;
+		this.pageUrl = "errorPage.jsp";
 
-	    this.pageUrl = "errorPage.jsp";
+		setPageSize(pageSize);
+		setAutoCount(autoCount);
+	}
 
-	    this.orderBy = null;
-	    this.order = null;
+	public Page() {
+		this(DEFAULT_PAGE_SIZE);
+	}
 
-	    setPageSize(pageSize);
-	    setAutoCount(autoCount);
-	  }
+	public Page(long totalSize, int pageSize, List<T> data) {
+		this.currentPageNo = 1;
 
-	  public Page()
-	  {
-	    this(DEFAULT_PAGE_SIZE);
-	  }
+		this.pageSize = DEFAULT_PAGE_SIZE;
 
-	  public Page(long totalSize, int pageSize, List<T> data)
-	  {
-	    this.currentPageNo = 1;
+		this.result = Collections.emptyList();
 
-	    this.pageSize = DEFAULT_PAGE_SIZE;
+		this.totalCount = -1L;
 
-	    this.result = Collections.emptyList();
+		this.autoCount = true;
 
-	    this.totalCount = -1L;
+		this.pageUrl = "errorPage.jsp";
 
-	    this.autoCount = true;
+		this.pageSize = pageSize;
+		this.totalCount = totalSize;
+		this.result = data;
+	}
 
-	    this.pageUrl = "errorPage.jsp";
+	public long getTotalPageCount() {
+		if (this.totalCount % this.pageSize == 0L) {
+			return (this.totalCount / this.pageSize);
+		}
+		return (this.totalCount / this.pageSize + 1L);
+	}
 
-	    this.orderBy = null;
-	    this.order = null;
+	public int getFirstOfPage() {
+		return ((this.currentPageNo - 1) * this.pageSize + 1);
+	}
 
-	    this.pageSize = pageSize;
-	    this.totalCount = totalSize;
-	    this.result = data;
-	  }
+	public int getLastOfPage() {
+		return (this.currentPageNo * this.pageSize);
+	}
 
-	  public long getTotalPageCount()
-	  {
-	    if (this.totalCount % this.pageSize == 0L) {
-	      return (this.totalCount / this.pageSize);
-	    }
-	    return (this.totalCount / this.pageSize + 1L);
-	  }
+	public static int getDEFAULT_PAGE_SIZE() {
+		return DEFAULT_PAGE_SIZE;
+	}
 
-	  public int getFirstOfPage()
-	  {
-	    return ((this.currentPageNo - 1) * this.pageSize + 1);
-	  }
+	public static void setDEFAULT_PAGE_SIZE(int dEFAULTPAGESIZE) {
+		DEFAULT_PAGE_SIZE = dEFAULTPAGESIZE;
+	}
 
-	  public int getLastOfPage()
-	  {
-	    return (this.currentPageNo * this.pageSize);
-	  }
+	public int getCurrentPageNo() {
+		return this.currentPageNo;
+	}
 
-	  public static int getDEFAULT_PAGE_SIZE()
-	  {
-	    return DEFAULT_PAGE_SIZE;
-	  }
+	public void setCurrentPageNo(int currentPageNo) {
+		this.currentPageNo = currentPageNo;
+	}
 
-	  public static void setDEFAULT_PAGE_SIZE(int dEFAULTPAGESIZE) {
-	    DEFAULT_PAGE_SIZE = dEFAULTPAGESIZE;
-	  }
+	public int getPageSize() {
+		return this.pageSize;
+	}
 
-	  public int getCurrentPageNo() {
-	    return this.currentPageNo;
-	  }
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
 
-	  public void setCurrentPageNo(int currentPageNo) {
-	    this.currentPageNo = currentPageNo;
-	  }
+	public List<T> getResult() {
+		return this.result;
+	}
 
-	  public int getPageSize() {
-	    return this.pageSize;
-	  }
+	public void setResult(List<T> result) {
+		this.result = result;
+	}
 
-	  public void setPageSize(int pageSize) {
-	    this.pageSize = pageSize;
-	  }
+	public long getTotalCount() {
+		return this.totalCount;
+	}
 
-	  public List<T> getResult() {
-	    return this.result;
-	  }
+	public void setTotalCount(long totalCount) {
+		this.totalCount = totalCount;
+	}
 
-	  public void setResult(List<T> result) {
-	    this.result = result;
-	  }
+	public boolean isAutoCount() {
+		return this.autoCount;
+	}
 
-	  public long getTotalCount() {
-	    return this.totalCount;
-	  }
+	public void setAutoCount(boolean autoCount) {
+		this.autoCount = autoCount;
+	}
 
-	  public void setTotalCount(long totalCount) {
-	    this.totalCount = totalCount;
-	  }
+	public String getPageUrl() {
+		return this.pageUrl;
+	}
 
-	  public boolean isAutoCount() {
-	    return this.autoCount;
-	  }
+	public void setPageUrl(String pageUrl) {
+		this.pageUrl = pageUrl;
+	}
 
-	  public void setAutoCount(boolean autoCount) {
-	    this.autoCount = autoCount;
-	  }
+	public static String getAsc() {
+		return "asc";
+	}
 
-	  public String getPageUrl() {
-	    return this.pageUrl;
-	  }
-
-	  public void setPageUrl(String pageUrl) {
-	    this.pageUrl = pageUrl;
-	  }
-
-//	  public long getStart()
-//	  {
-//	    return this.start;
-//	  }
-
-//	  public void setStart(long start) {
-//	    this.start = start;
-//	  }
-
-	  public String getOrderBy() {
-	    return this.orderBy;
-	  }
-
-	  public void setOrderBy(String orderBy) {
-	    this.orderBy = orderBy;
-	  }
-
-	  public String getOrder() {
-	    return this.order;
-	  }
-
-	  public void setOrder(String order) {
-	    this.order = order;
-	  }
-
-	  public static String getAsc() {
-	    return "asc";
-	  }
-
-	  public static String getDesc() {
-	    return "desc";
-	  }
-
-	  public String getFormName() {
-	    return this.formName;
-	  }
-
-	  public void setFormName(String formName) {
-	    this.formName = formName;
-	  }
+	public static String getDesc() {
+		return "desc";
+	}
+	
 }

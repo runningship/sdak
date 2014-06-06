@@ -9,9 +9,17 @@ public class GException extends RuntimeException{
 
 	private ExceptionType type;
 	
+	private int code;
+	
 	public GException(ExceptionType type,String msg){
 		super(msg);
 		this.type = type;
+	}
+	
+	public GException(ExceptionType type,int code ,String msg){
+		super(msg);
+		this.type = type;
+		this.code = code;
 	}
 	
 	public GException(ExceptionType type,String msg, Throwable ex){
@@ -22,4 +30,9 @@ public class GException extends RuntimeException{
 	public ExceptionType getType() {
 		return type;
 	}
+
+	public int getCode() {
+		return code;
+	}
+	
 }

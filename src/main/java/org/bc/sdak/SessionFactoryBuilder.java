@@ -3,6 +3,8 @@ package org.bc.sdak;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.Entity;
+
 import org.bc.sdak.utils.ClassUtil;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -52,6 +54,10 @@ public class SessionFactoryBuilder {
 	private static void addAnnotatedClass(String[] packages){
 		for(String packageName : packages){
 			for(Class<?> clazz : ClassUtil.getClasssFromPackage(packageName)){
+				Entity anno = clazz.getAnnotation(Entity.class);
+				if(anno==null){
+					continue;
+				}
 				cfg.addAnnotatedClass(clazz);
 				System.out.println("annotated class entity" + clazz + " added");
 			}

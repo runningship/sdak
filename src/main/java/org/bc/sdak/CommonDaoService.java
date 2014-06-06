@@ -4,10 +4,12 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.bc.sdak.utils.LogUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.transform.Transformers;
 
 /**
  * 一个基础的包括了增删改查操作的service,支持范型.该service试图包含所有真正的hibernate操作，使的上层service无需面对hibernate.
@@ -41,6 +43,9 @@ public class CommonDaoService {
 	@SuppressWarnings("unchecked")
 	@Transactional
 	public <T> T get(Class<T> clazz,Serializable id){
+		if(id==null){
+			return null;
+		}
 		return (T)getCurrentSession().get(clazz, id);
 	}
 	
@@ -72,6 +77,18 @@ public class CommonDaoService {
 	}
 	
 	@Transactional
+	public int execute(String hql, Object... params ){
+		Session session = getCurrentSession();
+		Query query = session.createQuery(hql);
+		if(params!=null){
+			for(int i=0;i<params.length;i++){
+				query.setParameter(i, params[i]);
+			}
+		}
+		return query.executeUpdate();
+	}
+	
+	@Transactional
 	@SuppressWarnings("unchecked")
 	public <T> List<T> listByParams(Class<T> clazz,String hql,String[] keys, Object[] values){
 		Session session = getCurrentSession();
@@ -79,6 +96,32 @@ public class CommonDaoService {
 		if(keys!=null){
 			for(int i=0;i<keys.length;i++){
 				query.setParameter(keys[i], values[i]);
+			}
+		}
+		return query.list();
+	}
+	
+	@Transactional
+	@SuppressWarnings("unchecked")
+	public <T> List<T> listByParams(Class<T> clazz,String hql,Object... values){
+		Session session = getCurrentSession();
+		Query query = session.createQuery(hql);
+		if(values!=null){
+			for(int i=0;i<values.length;i++){
+				query.setParameter(i, values[i]);
+			}
+		}
+		return query.list();
+	}
+	
+	@Transactional
+	public List<Map> listAsMap(String hql,Object... params){
+		Session session = getCurrentSession();
+		Query query = session.createQuery(hql);
+		query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+		if(params!=null){
+			for(int i=0;i<params.length;i++){
+				query.setParameter(i, params[i]);
 			}
 		}
 		return query.list();
@@ -139,8 +182,8 @@ public class CommonDaoService {
 	    Long count = Long.valueOf(0L);
 	    String fromHql = hql;
 	    int fromIndex = fromHql.indexOf("from");
-	    int orderIndex = fromHql.indexOf("order by");
 	    fromHql = fromHql.substring(fromIndex);
+	    int orderIndex = fromHql.indexOf("order by");
 	    if(orderIndex!=-1){
 	    	fromHql = fromHql.substring(0,orderIndex);
 	    }
