@@ -162,13 +162,21 @@ public class CommonDaoService {
 	}
 	
 	@Transactional
-	public <T> Page<T> findPage(Page<T> page, String hql, Object... values)
+	public <T> Page<T> findPage(Page<T> page, String hql, Object... values){
+		return findPage(page,hql , false,values);
+	}
+	
+	@Transactional
+	public <T> Page<T> findPage(Page<T> page, String hql,boolean returnMap, Object... values)
 	  {
 		Session session= getCurrentSession();
 	    Query q = createQuery(session,hql, values);
 	    if (page.isAutoCount()) {
 	      long totalCount = countHqlResult(hql, values);
 	      page.setTotalCount(totalCount);
+	    }
+	    if(returnMap){
+	    	q.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 	    }
 	    q.setFirstResult(page.getFirstOfPage() - 1);
 	    q.setMaxResults(page.getPageSize());
