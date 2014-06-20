@@ -128,6 +128,19 @@ public class CommonDaoService {
 	}
 	
 	@Transactional
+	public List<Map> listSql(String sql,Object... params){
+		Session session = getCurrentSession();
+		Query query = session.createSQLQuery(sql);
+		query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+		if(params!=null){
+			for(int i=0;i<params.length;i++){
+				query.setParameter(i, params[i]);
+			}
+		}
+		return query.list();
+	}
+	
+	@Transactional
 	public <T> T getUniqueByParams(Class<T> clazz,String[] keys,Object[] values){
 		StringBuilder sb  = new StringBuilder("from "+clazz.getSimpleName() + " where 1=1 ");
 		for(int i=0;i<keys.length;i++){

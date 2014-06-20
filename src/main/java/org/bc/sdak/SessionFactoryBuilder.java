@@ -21,7 +21,7 @@ public class SessionFactoryBuilder {
 		SessionFactoryBuilder.settings = settings;
 	}
 	
-	public static SessionFactory buildOrGet(){
+	public synchronized static SessionFactory buildOrGet(){
 		if(sf == null){
 			cfg = new Configuration();
 			for(String key : settings.keySet()){

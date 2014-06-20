@@ -6,7 +6,7 @@ import java.util.List;
 public class Page<T> {
 	public static final String ASC = "asc";
 	public static final String DESC = "desc";
-	public static int DEFAULT_PAGE_SIZE = 10;
+	public static int DEFAULT_PAGE_SIZE = 15;
 	/**
 	 * 当前页数，从1开始
 	 */
