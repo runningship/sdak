@@ -1,16 +1,18 @@
 package org.bc.sdak.utils;
 
 import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 
 
 public class LogUtil {
 
 	
-	public static void log(Level level, String msg , Throwable ex){
+	public static void log(Priority p, String msg , Throwable ex){
 		String name = new Exception().getStackTrace()[0].getClass().getName();
 		Logger log = getLogger(name);
-		log.log(level, msg,ex);
+		log.log(p, msg, ex);
 	}
 	
 	public static void info(String msg){
@@ -22,11 +24,12 @@ public class LogUtil {
 	public static void warning(String msg){
 		String name = new Exception().getStackTrace()[0].getClass().getName();
 		Logger log = getLogger(name);
-		log.warning(msg);
+		log.warn(msg);
 	}
 	
 	private static Logger getLogger(String name){
-		return TLogger.getTLogger(name).log;
+		return Logger.getLogger(name);
+//		return TLogger.getTLogger(name).log;
 	}
 	
 }

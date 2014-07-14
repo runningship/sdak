@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Priority;
+
 public class ClassUtil {
 
 	/** 
@@ -47,7 +50,7 @@ public class ClassUtil {
 	        }  
 	  
 	    } catch (Exception e) {  
-	        e.printStackTrace();  
+	        LogUtil.log(Level.ERROR, "加载类文件失败", e);
 	    }  
 	  
 	    return clazzs;  

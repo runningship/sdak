@@ -48,7 +48,6 @@ public class TransactionalServiceHelper implements MethodInterceptor{
 			}
 			return result;
 		}catch(Exception ex){
-			ex.printStackTrace();
 			session.getTransaction().rollback();
 			System.out.println("rollback transaction");
 			throw ex;
