@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bc.sdak.utils.LogUtil;
+import org.hibernate.PropertyValueException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
@@ -36,7 +37,11 @@ public class CommonDaoService {
 	@Transactional
 	public void delete(Object obj){
 		Session session = getCurrentSession();
-		session.delete(obj);
+		try{
+			session.delete(obj);
+		}catch(PropertyValueException ex){
+			throw ex;
+		}
 		session.flush();
 	}
 	

@@ -6,6 +6,8 @@ import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
+import org.apache.log4j.Level;
+import org.bc.sdak.utils.LogUtil;
 import org.hibernate.Session;
 
 /**
@@ -50,6 +52,7 @@ public class TransactionalServiceHelper implements MethodInterceptor{
 		}catch(Exception ex){
 			session.getTransaction().rollback();
 			System.out.println("rollback transaction");
+			LogUtil.log(Level.ERROR, "dao 错误", ex);
 			throw ex;
 		}
 	}
