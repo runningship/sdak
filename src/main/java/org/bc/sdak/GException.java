@@ -11,15 +11,17 @@ public class GException extends RuntimeException{
 	
 	private int code;
 	
+	private String field;
+	
+	public GException(ExceptionType type,String field,String msg){
+		super(msg);
+		this.type = type;
+		this.field = field;
+	}
+	
 	public GException(ExceptionType type,String msg){
 		super(msg);
 		this.type = type;
-	}
-	
-	public GException(ExceptionType type,int code ,String msg){
-		super(msg);
-		this.type = type;
-		this.code = code;
 	}
 	
 	public GException(ExceptionType type,String msg, Throwable ex){
@@ -33,6 +35,10 @@ public class GException extends RuntimeException{
 
 	public int getCode() {
 		return code;
+	}
+
+	public String getField() {
+		return field;
 	}
 	
 }

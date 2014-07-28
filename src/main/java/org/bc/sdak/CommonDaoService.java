@@ -133,6 +133,19 @@ public class CommonDaoService {
 	}
 	
 	@Transactional
+	public List<Map> listSqlAsMap(String sql,Object... params){
+		Session session = getCurrentSession();
+		Query query = session.createSQLQuery(sql);
+		query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+		if(params!=null){
+			for(int i=0;i<params.length;i++){
+				query.setParameter(i, params[i]);
+			}
+		}
+		return query.list();
+	}
+	
+	@Transactional
 	public List<Map> listSql(String sql,Object... params){
 		Session session = getCurrentSession();
 		Query query = session.createSQLQuery(sql);

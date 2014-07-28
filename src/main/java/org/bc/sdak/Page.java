@@ -16,6 +16,8 @@ public class Page<T> {
 	protected long totalCount;
 	protected boolean autoCount;
 	protected String pageUrl;
+	
+	public boolean mergeResult = false;
 
 	public Page(int pageSize) {
 		this.currentPageNo = 1;
