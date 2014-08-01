@@ -17,6 +17,10 @@ public class Page<T> {
 	protected boolean autoCount;
 	protected String pageUrl;
 	
+	public String order;
+	
+	public String orderBy;
+	
 	public boolean mergeResult = false;
 
 	public Page(int pageSize) {

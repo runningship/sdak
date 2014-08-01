@@ -12,6 +12,8 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 
+import com.mysql.jdbc.StringUtils;
+
 /**
  * 一个基础的包括了增删改查操作的service,支持范型.该service试图包含所有真正的hibernate操作，使的上层service无需面对hibernate.
  * 该service定位为最小单元的serice,提供了最小单元的dao操作，原则上其他复杂service的复杂方法可以通过多个CommonDaoService的方法组成。
@@ -200,6 +202,9 @@ public class CommonDaoService {
 	@Transactional
 	public <T> Page<T> findPage(Page<T> page, String hql,boolean returnMap, Object... values)
 	  {
+		if(!StringUtils.isNullOrEmpty(page.orderBy)){
+			hql+=" order by "+page.orderBy+" "+page.order;
+		}
 		Session session= getCurrentSession();
 	    Query q = createQuery(session,hql, values);
 	    if (page.isAutoCount()) {
