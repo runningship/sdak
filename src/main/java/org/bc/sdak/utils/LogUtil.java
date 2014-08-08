@@ -12,7 +12,11 @@ public class LogUtil {
 	public static void log(Priority p, String msg , Throwable ex){
 		String name = new Exception().getStackTrace()[0].getClass().getName();
 		Logger log = getLogger(name);
-		log.log(p, msg, ex);
+		if(ex!=null){
+			log.log(p, msg, ex);
+		}else{
+			log.log(p, msg);
+		}
 	}
 	
 	public static void info(String msg){
