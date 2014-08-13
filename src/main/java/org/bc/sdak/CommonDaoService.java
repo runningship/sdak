@@ -221,6 +221,30 @@ public class CommonDaoService {
 	  }
 	
 	@Transactional
+	public long countHql(String hql, Object... values)
+	  {
+	    Long count = Long.valueOf(0L);
+	    String fromHql = hql;
+	    int orderIndex = fromHql.indexOf("order by");
+	    if(orderIndex!=-1){
+	    	fromHql = fromHql.substring(0,orderIndex);
+	    }
+
+	    String countHql = fromHql;
+	    Session session= getCurrentSession();
+	    try
+	    {
+	      count = (Long)createQuery(session,countHql, values).uniqueResult();
+	    } catch (Exception e) {
+	      throw new RuntimeException("hql can't be auto count, hql is:" + countHql, e);
+	    }
+	    if(count==null){
+	    	return 0;
+	    }
+	    return count.longValue();
+	  }
+	
+	@Transactional
 	public long countHqlResult(String hql, Object... values)
 	  {
 	    Long count = Long.valueOf(0L);
