@@ -214,8 +214,12 @@ public class CommonDaoService {
 	    if(returnMap){
 	    	q.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 	    }
+	    if(page.getPageSize()==-1){
+		    q.setMaxResults((int) page.getTotalCount());
+	    }else{
+		    q.setMaxResults(page.getPageSize());
+	    }
 	    q.setFirstResult(page.getFirstOfPage() - 1);
-	    q.setMaxResults(page.getPageSize());
 	    page.setResult(q.list());
 	    return page;
 	  }
