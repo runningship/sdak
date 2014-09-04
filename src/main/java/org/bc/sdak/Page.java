@@ -10,12 +10,12 @@ public class Page<T> {
 	/**
 	 * 当前页数，从1开始
 	 */
-	protected int currentPageNo;
-	protected int pageSize;
-	protected List<T> result;
-	protected long totalCount;
-	protected boolean autoCount;
-	protected String pageUrl;
+	public int currentPageNo;
+	public int pageSize;
+	public List<T> result;
+	public long totalCount;
+	public boolean autoCount;
+	public String pageUrl;
 	
 	public String order;
 	
