@@ -240,7 +240,7 @@ public class CommonDaoService {
 	    {
 	      count = (Long)createQuery(session,countHql, values).uniqueResult();
 	    } catch (Exception e) {
-	      throw new RuntimeException("hql can't be auto count, hql is:" + countHql, e);
+	      throw new RuntimeException("hql can't be auto count, hql is:" + countHql+",params="+values, e);
 	    }
 	    if(count==null){
 	    	return 0;
@@ -268,7 +268,7 @@ public class CommonDaoService {
 	    {
 	      count = (Long)createQuery(session,countHql, values).uniqueResult();
 	    } catch (Exception e) {
-	      throw new RuntimeException("hql can't be auto count, hql is:" + countHql, e);
+	      throw new RuntimeException("hql can't be auto count, hql is:" + countHql+",params="+values, e);
 	    }
 	    if(count==null){
 	    	return 0;
