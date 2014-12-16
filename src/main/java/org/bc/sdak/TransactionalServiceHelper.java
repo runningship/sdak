@@ -35,7 +35,12 @@ public class TransactionalServiceHelper implements MethodInterceptor{
 		if(needTransaction == false){
 			return target.invokeSuper(obj, args);
 		}
-		Session session = SessionFactoryBuilder.buildOrGet().getCurrentSession();
+		Session session=null;
+		if(MutilSessionFactoryBuilder.sfm!=null){
+			session = MutilSessionFactoryBuilder.buildOrGet().getCurrentSession();
+		}else{
+			session = SessionFactoryBuilder.buildOrGet().getCurrentSession();
+		}
 		boolean inParentTrans = session.getTransaction().isParticipating();
 		
 		if(inParentTrans==false){

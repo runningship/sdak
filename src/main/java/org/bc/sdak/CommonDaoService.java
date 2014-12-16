@@ -288,6 +288,9 @@ public class CommonDaoService {
 	  }
 	
 	private Session getCurrentSession(){
+		if(MutilSessionFactoryBuilder.sfm!=null){
+			return MutilSessionFactoryBuilder.buildOrGet().getCurrentSession();
+		}
 		return SessionFactoryBuilder.buildOrGet().getCurrentSession();
 	}
 }
