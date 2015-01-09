@@ -188,7 +188,7 @@ private void processGException(HttpServletResponse resp ,GException ex){
 				ctMap.put(ctcName, cc);
 			}
 		}else{
-			LogUtil.info("we get ctc class from cache");
+//			LogUtil.info("we get ctc class from cache");
 		}
 		
 		for(CtMethod cm : cc.getDeclaredMethods()){
