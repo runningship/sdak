@@ -10,5 +10,6 @@ public enum PlatformExceptionType implements ExceptionType{
 	ParameterTypeError,
 	AuthCodeError,
 	MachineCodeEmpty,
-	BusinessException
+	BusinessException,
+	UserOfflineException
 }
