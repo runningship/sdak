@@ -48,11 +48,13 @@ public class GrandFilter implements Filter {
 		response.setCharacterEncoding(encodeString);
 		HttpServletRequest req  = (HttpServletRequest)request;
 		HttpServletResponse resp = (HttpServletResponse)response;
+		ThreadSession.setHttpSession(req.getSession());
 		String jspPath = req.getServletPath();
 		String path = "";
 		boolean isJSP = false;
 		if(jspPath.endsWith(".jsp")){
 			isJSP = true;
+			req.setAttribute("projectName", req.getServletContext().getContextPath());
 			path = jspPath.replace(".jsp", "");
 		}else{
 			path = jspPath.replace("/c/", "/");
