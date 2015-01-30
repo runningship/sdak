@@ -17,6 +17,8 @@ public class ModelAndView {
 	public Map<String,Object> jspData = new HashMap<String,Object>();
 	public String returnText = "";
 	public boolean encodeReturnText;
+	
+	public boolean outputByService = false;
 	public ModelAndView(){
 		
 	}

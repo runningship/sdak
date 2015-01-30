@@ -49,6 +49,7 @@ public class GrandFilter implements Filter {
 		HttpServletRequest req  = (HttpServletRequest)request;
 		HttpServletResponse resp = (HttpServletResponse)response;
 		ThreadSession.setHttpSession(req.getSession());
+		ThreadSession.setHttpServletResponse(resp);
 		String jspPath = req.getServletPath();
 		String path = "";
 		boolean isJSP = false;
@@ -85,27 +86,37 @@ public class GrandFilter implements Filter {
 			if(mv.redirect!=null){
 				resp.sendRedirect(mv.redirect);
 			}else if(mv.jsp==null){
-				if(StringUtils.isNotEmpty(mv.contentType)){
-					resp.setContentType(mv.contentType);
-				}
-				if(StringUtils.isNotEmpty(mv.returnText)){
-					if(mv.encodeReturnText){
-						resp.getWriter().write(Escape.escape(mv.returnText));
+				if(mv.outputByService==false){
+					if(StringUtils.isNotEmpty(mv.contentType)){
+						resp.setContentType(mv.contentType);
+					}
+					if(StringUtils.isNotEmpty(mv.returnText)){
+						if(mv.encodeReturnText){
+							resp.getWriter().write(Escape.escape(mv.returnText));
+						}else{
+							resp.getWriter().write(mv.returnText);
+						}
 					}else{
-						resp.getWriter().write(mv.returnText);
+						resp.getWriter().write(mv.data.toString());
 					}
 				}else{
-					resp.getWriter().write(mv.data.toString());
+					// 由service 负责输出
 				}
+				
 			}else{
-				ServletHelper.fillMV(req,mv);
-				RequestDispatcher rd = req.getRequestDispatcher(mv.jsp);
-				if(rd==null){
-					resp.setStatus(404);
-					resp.getWriter().println("404 : page not found");
+				if(mv.outputByService==false){
+					ServletHelper.fillMV(req,mv);
+					RequestDispatcher rd = req.getRequestDispatcher(mv.jsp);
+					if(rd==null){
+						resp.setStatus(404);
+						resp.getWriter().println("404 : page not found");
+					}else{
+						rd.forward(req, resp);
+					}
 				}else{
-					rd.forward(req, resp);
+					// 由service 负责输出
 				}
+				
 			}
 		}catch(Exception ex){
 			resp.setStatus(500);

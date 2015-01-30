@@ -1,11 +1,12 @@
 package org.bc.web;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.apache.commons.lang.StringUtils;
 public class ThreadSession {
 
 	private static final ThreadLocal<HttpSession> HttpSession = new ThreadLocal<HttpSession>();
+	
+	private static final ThreadLocal<HttpServletResponse> HttpServletResponse = new ThreadLocal<HttpServletResponse>();
 	
 	private static final ThreadLocal<Boolean> superAdmin = new ThreadLocal<Boolean>();
     private ThreadSession() {  
@@ -26,5 +27,13 @@ public class ThreadSession {
     public static void setHttpSession(HttpSession session){
     	HttpSession.set(session);
     }
+    
+    public static void setHttpServletResponse(HttpServletResponse response){
+    	HttpServletResponse.set(response);
+    }
+
+	public static HttpServletResponse getHttpservletresponse() {
+		return HttpServletResponse.get();
+	}
     
 }
