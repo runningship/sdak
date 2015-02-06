@@ -34,6 +34,8 @@ public class GrandFilter implements Filter {
 	private String encodeString;
 	private static Map<String , CtClass>ctMap = new HashMap<String , CtClass>();
 
+	private UserOfflineHandler userOfflineHandler;
+	
 	// Filter注销方法
 	@Override
 	public void destroy() {
@@ -122,11 +124,11 @@ public class GrandFilter implements Filter {
 			resp.setStatus(500);
 			//go to error page 
 			if(ex instanceof GException){
-				processGException(resp, (GException)ex);
+				processGException(req,resp, (GException)ex);
 			}else if (ex instanceof InvocationTargetException ){
 				InvocationTargetException iex = (InvocationTargetException)ex;
 				if(iex.getTargetException() instanceof GException ){
-					processGException(resp, (GException)iex.getTargetException());
+					processGException(req,resp, (GException)iex.getTargetException());
 				}else{
 					LogUtil.log(Level.ERROR,"internal server error",iex.getTargetException());
 					iex.getTargetException().printStackTrace(resp.getWriter());
@@ -145,9 +147,15 @@ public class GrandFilter implements Filter {
 	public void init(FilterConfig filterConfig) throws ServletException {
 		//
 		encodeString = filterConfig.getInitParameter("encoding");
+		String userOfflineHandlerClassName = filterConfig.getInitParameter("userOfflineHandler");
+		try {
+			userOfflineHandler = (UserOfflineHandler)Class.forName(userOfflineHandlerClassName).newInstance();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
-private void processGException(HttpServletResponse resp ,GException ex){
+private void processGException(HttpServletRequest req ,HttpServletResponse resp ,GException ex){
 		
 		resp.setStatus(400);
 		JSONObject jobj = new JSONObject();
@@ -158,6 +166,8 @@ private void processGException(HttpServletResponse resp ,GException ex){
 			jobj.put("type",PlatformExceptionType.ParameterTypeError.toString());
 			jobj.put("field", ex.getField());
 			jobj.put("msg", ex.getMessage());
+		}else if(ex.getType()==PlatformExceptionType.UserOfflineException){
+			userOfflineHandler.handle(req ,resp);
 		}else{
 			jobj.put("msg", ex.getMessage());
 		}
