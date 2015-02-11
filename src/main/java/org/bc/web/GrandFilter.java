@@ -148,6 +148,9 @@ public class GrandFilter implements Filter {
 		//
 		encodeString = filterConfig.getInitParameter("encoding");
 		String userOfflineHandlerClassName = filterConfig.getInitParameter("userOfflineHandler");
+		if(StringUtils.isEmpty(userOfflineHandlerClassName)){
+			return;
+		}
 		try {
 			userOfflineHandler = (UserOfflineHandler)Class.forName(userOfflineHandlerClassName).newInstance();
 		} catch (Exception e) {
