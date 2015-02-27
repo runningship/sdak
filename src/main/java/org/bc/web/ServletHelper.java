@@ -35,7 +35,7 @@ public class ServletHelper {
 	public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	public static SimpleDateFormat dateSdf = new SimpleDateFormat("yyyy-MM-dd");
 	
-	private static Map<String,Object> getData(HttpServletRequest req) {
+	public static Map<String,Object> getData(HttpServletRequest req) {
 		Map<String,Object> map = new HashMap<String,Object>();
 		Enumeration<String> names = req.getParameterNames();
 		while(names.hasMoreElements()){
