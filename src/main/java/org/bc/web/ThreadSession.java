@@ -10,7 +10,10 @@ public class ThreadSession {
 	
 	private static final ThreadLocal<Boolean> superAdmin = new ThreadLocal<Boolean>();
 	
-	private static final ThreadLocal<String> domain = new ThreadLocal<String>();
+	private static final ThreadLocal<String> cityPY = new ThreadLocal<String>();
+	
+	private static final ThreadLocal<String> cityCoordinate = new ThreadLocal<String>();
+	
     private ThreadSession() {  
     }  
   
@@ -18,12 +21,20 @@ public class ThreadSession {
         return superAdmin.get(); 
     }  
   
-    public static String getDomain(){
-    	return domain.get();
+    public static String getCityPY(){
+    	return cityPY.get();
     }
-    public static void setDomain(String domain){
-    	ThreadSession.domain.set(domain);
+    public static void setCityPY(String city){
+    	ThreadSession.cityPY.set(city);
     }
+    
+    public static String getCityCoordinate(){
+    	return cityCoordinate.get();
+    }
+    public static void setCityCoordinate(String coordinate){
+    	ThreadSession.cityCoordinate.set(coordinate);
+    }
+    
     public static void setSuperAdminr(boolean sup) {  
     	superAdmin.set(sup);
     }

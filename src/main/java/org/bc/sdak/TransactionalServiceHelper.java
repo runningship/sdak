@@ -41,6 +41,12 @@ public class TransactionalServiceHelper implements MethodInterceptor{
 		}else{
 			session = SessionFactoryBuilder.buildOrGet().getCurrentSession();
 		}
+//		String city = ThreadSession.getCityPY();
+//		if(StringUtils.isEmpty(city)){
+//			System.out.println("城市为空,sid="+ThreadSession.getHttpSession().getId());
+//		}else{
+//			System.out.println("城市:"+city+",sid="+ThreadSession.getHttpSession().getId());
+//		}
 		boolean inParentTrans = session.getTransaction().isParticipating();
 		
 		if(inParentTrans==false){

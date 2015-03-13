@@ -171,10 +171,14 @@ private void processGException(HttpServletRequest req ,HttpServletResponse resp 
 			jobj.put("msg", ex.getMessage());
 		}else if(ex.getType()==PlatformExceptionType.UserOfflineException){
 			userOfflineHandler.handle(req ,resp);
+			return;
 		}else{
 			jobj.put("msg", ex.getMessage());
 		}
-		LogUtil.log(Level.WARN, "警告", ex);
+		if(ex.getType()!=PlatformExceptionType.UserOfflineException){
+			LogUtil.log(Level.WARN, "警告", ex);
+		}
+		
 		try {
 			resp.getWriter().println(jobj.toString());
 		} catch (IOException e) {
