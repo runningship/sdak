@@ -208,27 +208,36 @@ public class ServletHelper {
         				f.set(obj, pval[0]);
         			}
 				}
-			} catch (IllegalArgumentException | IllegalAccessException e) {
+			} catch (Exception e) {
 				LogUtil.warning("set value for "+obj.getClass().getName()+"."+pname+" failed.("+e.getMessage()+")");
 			}
 		}
 	}
 	
 	public static ModelAndView call(Object manager, String method , Object[] data) throws InvocationTargetException {
-		try {
+//		try {
 			for(Method m : manager.getClass().getDeclaredMethods()){
 				if(!m.getName().equals(method)){
 					continue;
 				}
-				Object result = m.invoke(manager,data);
+				Object result;
+				try {
+					result = m.invoke(manager,data);
+				} catch (IllegalAccessException e) {
+					throw new GException(PlatformExceptionType.ModuleInvokeError, "",e);
+				} catch (IllegalArgumentException e) {
+					throw new GException(PlatformExceptionType.ModuleInvokeError, "",e);
+				}
 				if(result instanceof ModelAndView){
 					return (ModelAndView) result;
 				}
 			}
 			throw new GException(PlatformExceptionType.MethodReturnTypeError,manager.getClass().getName()+"."+method+" does not return a ModelAndView");
-		} catch (SecurityException | IllegalAccessException | IllegalArgumentException ex) {
-			throw new GException(PlatformExceptionType.ModuleInvokeError, "",ex);
-		}
+//		} catch (InvocationTargetException ex) {
+//			throw new GException(PlatformExceptionType.ModuleInvokeError, ex.getTargetException().getMessage(),ex);
+//		} catch(Exception ex){
+//			throw new GException(PlatformExceptionType.ModuleInvokeError, ex.getMessage(),ex);
+//		}
 	}
 
 	public static void fillMV(ServletRequest req, ModelAndView mv) {

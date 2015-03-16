@@ -99,7 +99,7 @@ public class GrandFilter implements Filter {
 							resp.getWriter().write(mv.returnText);
 						}
 					}else{
-						resp.getWriter().write(mv.data.toString());
+						resp.getOutputStream().write(mv.data.toString().getBytes("utf-8"));
 					}
 				}else{
 					// 由service 负责输出
