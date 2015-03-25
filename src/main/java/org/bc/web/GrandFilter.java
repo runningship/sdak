@@ -121,7 +121,7 @@ public class GrandFilter implements Filter {
 				
 			}
 		}catch(Exception ex){
-			resp.setStatus(500);
+			resp.setStatus(302);
 			//go to error page 
 			if(ex instanceof GException){
 				processGException(req,resp, (GException)ex);
@@ -159,8 +159,8 @@ public class GrandFilter implements Filter {
 	}
 	
 private void processGException(HttpServletRequest req ,HttpServletResponse resp ,GException ex){
-		
-		resp.setStatus(400);
+		//目前房金宝特用，如果其他的项目也用，需要修改buildHtml.js
+		resp.setStatus(303);
 		JSONObject jobj = new JSONObject();
 		if(ex.getType()==PlatformExceptionType.ParameterMissingError){
 			jobj.put("type",PlatformExceptionType.ParameterMissingError.toString());
