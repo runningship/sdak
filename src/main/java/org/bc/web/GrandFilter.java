@@ -52,6 +52,7 @@ public class GrandFilter implements Filter {
 		HttpServletResponse resp = (HttpServletResponse)response;
 		ThreadSession.setHttpSession(req.getSession());
 		ThreadSession.setHttpServletResponse(resp);
+		ThreadSession.HttpServletRequest .set(req);
 		String jspPath = req.getServletPath();
 		String path = "";
 		boolean isJSP = false;

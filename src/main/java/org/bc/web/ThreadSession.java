@@ -1,10 +1,13 @@
 package org.bc.web;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 public class ThreadSession {
 
 	private static final ThreadLocal<HttpSession> HttpSession = new ThreadLocal<HttpSession>();
+	
+	public static final ThreadLocal<HttpServletRequest> HttpServletRequest = new ThreadLocal<HttpServletRequest>();
 	
 	private static final ThreadLocal<HttpServletResponse> HttpServletResponse = new ThreadLocal<HttpServletResponse>();
 	
