@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.persistence.Entity;
 
+import org.apache.commons.lang.StringUtils;
 import org.bc.sdak.utils.ClassUtil;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -29,6 +30,16 @@ public class MutilSessionFactoryBuilder {
 			if(packages!=null){
 				packages = packages.replace("\n", "");
 				addAnnotatedClass(cfg , packages.split(";"));
+			}
+			String classes = settings.get("annotated.classess");
+			if(StringUtils.isNotEmpty(classes)){
+				for(String className : classes.split(";")){
+					try {
+						cfg.addAnnotatedClass(Class.forName(className));
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 			ServiceRegistry registry = new ServiceRegistryBuilder().applySettings(cfg.getProperties()).build();
 			sf = cfg.buildSessionFactory(registry);
