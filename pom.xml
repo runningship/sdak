@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.bc</groupId>
 	<artifactId>sdak</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.1.302</version>
 	<name>sdak</name>
 	<description>Simple Data Access Kit</description>
 	<dependencies>
