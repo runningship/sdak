@@ -210,6 +210,9 @@ public class ServletHelper {
 				}
 			} catch (Exception e) {
 				LogUtil.warning("set value for "+obj.getClass().getName()+"."+pname+" failed.("+e.getMessage()+")");
+				if(e instanceof GException){
+					throw (GException)e;
+				}
 			}
 		}
 	}

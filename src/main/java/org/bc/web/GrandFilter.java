@@ -122,7 +122,7 @@ public class GrandFilter implements Filter {
 				
 			}
 		}catch(Exception ex){
-			resp.setStatus(302);
+			resp.setStatus(500);
 			JSONObject jobj = new JSONObject();
 //			resp.setHeader("return_status", "302");
 			//go to error page 
@@ -163,7 +163,7 @@ public class GrandFilter implements Filter {
 	
 private void processGException(HttpServletRequest req ,HttpServletResponse resp ,GException ex){
 		//目前房金宝特用，如果其他的项目也用，需要修改buildHtml.js
-		resp.setStatus(303);
+		resp.setStatus(400);
 		JSONObject jobj = new JSONObject();
 //		jobj.put("return_status", 303);
 		if(ex.getType()==PlatformExceptionType.ParameterMissingError){
