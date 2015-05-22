@@ -82,7 +82,7 @@ public class GrandFilter implements Filter {
 		try{
 			Object[] params = buildParamForMethod(manager,handler.getMethod(),req);
 			ModelAndView mv = ServletHelper.call(manager,handler.getMethod(),params);
-			if(isJSP){
+			if(isJSP && mv.jsp==null){
 				mv.jsp = path+".jsp";
 			}
 			
