@@ -225,6 +225,29 @@ public class CommonDaoService {
 	  }
 	
 	@Transactional
+	public <T> Page<T> findPageBySql(Page<T> page, String hql, Object... values)
+	  {
+		if(!StringUtils.isNullOrEmpty(page.orderBy)){
+			hql+=" order by "+page.orderBy+" "+page.order;
+		}
+		Session session= getCurrentSession();
+	    Query q = createSQLQuery(session,hql, values);
+	    if (page.isAutoCount()) {
+	      long totalCount = countHqlResult(hql, values);
+	      page.setTotalCount(totalCount);
+	    }
+    	q.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+	    if(page.getPageSize()==-1){
+		    q.setMaxResults((int) page.getTotalCount());
+	    }else{
+		    q.setMaxResults(page.getPageSize());
+	    }
+	    q.setFirstResult(page.getFirstOfPage() - 1);
+	    page.setResult(q.list());
+	    return page;
+	  }
+	
+	@Transactional
 	public long countHql(String hql, Object... values)
 	  {
 	    Long count = Long.valueOf(0L);
@@ -279,6 +302,17 @@ public class CommonDaoService {
 	private Query createQuery(Session session,String queryString, Object... values)
 	  {
 	    Query query = session.createQuery(queryString);
+	    if (values != null) {
+	      for (int i = 0; i < values.length; ++i) {
+	        query.setParameter(i, values[i]);
+	      }
+	    }
+	    return query;
+	  }
+	
+	private Query createSQLQuery(Session session,String queryString, Object... values)
+	  {
+	    Query query = session.createSQLQuery(queryString);
 	    if (values != null) {
 	      for (int i = 0; i < values.length; ++i) {
 	        query.setParameter(i, values[i]);
