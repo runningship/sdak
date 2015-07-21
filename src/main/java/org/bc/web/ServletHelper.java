@@ -46,6 +46,7 @@ public class ServletHelper {
 			}
 			map.put(key, val);
 		}
+		map.put("_site", new String[]{req.getServerName()} );
 		return map;
 	}
 	
