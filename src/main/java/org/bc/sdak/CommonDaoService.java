@@ -233,7 +233,7 @@ public class CommonDaoService {
 		Session session= getCurrentSession();
 	    Query q = createSQLQuery(session,hql, values);
 	    if (page.isAutoCount()) {
-	      long totalCount = countHqlResult(hql, values);
+	      long totalCount = countSqlResult(hql, values);
 	      page.setTotalCount(totalCount);
 	    }
     	q.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
@@ -297,6 +297,34 @@ public class CommonDaoService {
 	    	return 0;
 	    }
 	    return count.longValue();
+	  }
+	
+	@Transactional
+	public Integer countSqlResult(String hql, Object... values)
+	  {
+		Integer count = Integer.valueOf(0);
+	    String fromHql = hql;
+	    int fromIndex = fromHql.indexOf("from");
+	    fromHql = fromHql.substring(fromIndex);
+	    int orderIndex = fromHql.indexOf("order by");
+	    if(orderIndex!=-1){
+	    	fromHql = fromHql.substring(0,orderIndex);
+	    }
+//	    fromHql = "from " + StringUtils.substringAfter(fromHql, "from");
+//	    fromHql = StringUtils.substringBefore(fromHql, "order by");
+
+	    String countHql = "select count(*) " + fromHql;
+	    Session session= getCurrentSession();
+	    try
+	    {
+	      count = (Integer)createSQLQuery(session,countHql, values).uniqueResult();
+	    } catch (Exception e) {
+	      throw new RuntimeException("hql can't be auto count, hql is:" + countHql+",params="+values, e);
+	    }
+	    if(count==null){
+	    	return 0;
+	    }
+	    return count;
 	  }
 	
 	private Query createQuery(Session session,String queryString, Object... values)
