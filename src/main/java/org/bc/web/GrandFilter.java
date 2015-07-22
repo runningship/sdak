@@ -122,8 +122,9 @@ public class GrandFilter implements Filter {
 				
 			}
 		}catch(Exception ex){
-			resp.setStatus(500);
+//			resp.setStatus(500);
 			JSONObject jobj = new JSONObject();
+			jobj.put("return_status", "302");
 //			resp.setHeader("return_status", "302");
 			//go to error page 
 			if(ex instanceof GException){
@@ -134,11 +135,13 @@ public class GrandFilter implements Filter {
 					processGException(req,resp, (GException)iex.getTargetException());
 				}else{
 					LogUtil.log(Level.ERROR,"internal server error",iex.getTargetException());
-					iex.getTargetException().printStackTrace(resp.getWriter());
+					resp.getWriter().println(jobj.toString());
+//					iex.getTargetException().printStackTrace(resp.getWriter());
 				}
 			}else{
 				LogUtil.log(Level.ERROR,"internal server error",ex);
-				ex.printStackTrace(resp.getWriter());
+				resp.getWriter().println(jobj.toString());
+//				ex.printStackTrace(resp.getWriter());
 			}
 		}
 		// 继续向下执行，如果还有其他filter继续调用其他filter，没有的话将消息发送给服务器或客户端
@@ -163,9 +166,9 @@ public class GrandFilter implements Filter {
 	
 private void processGException(HttpServletRequest req ,HttpServletResponse resp ,GException ex){
 		//目前房金宝特用，如果其他的项目也用，需要修改buildHtml.js
-		resp.setStatus(400);
+//		resp.setStatus(400);
 		JSONObject jobj = new JSONObject();
-//		jobj.put("return_status", 303);
+		jobj.put("return_status", 303);
 		if(ex.getType()==PlatformExceptionType.ParameterMissingError){
 			jobj.put("type",PlatformExceptionType.ParameterMissingError.toString());
 			jobj.put("field", ex.getField());
