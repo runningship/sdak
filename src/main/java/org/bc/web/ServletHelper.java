@@ -46,7 +46,9 @@ public class ServletHelper {
 			}
 			map.put(key, val);
 		}
-		map.put("_site", new String[]{req.getServerName()} );
+		if(req.getAttribute("_site")!=null){
+			map.put("_site", new String[]{(String)req.getAttribute("_site")} );
+		}
 		return map;
 	}
 	
