@@ -96,6 +96,18 @@ public class CommonDaoService {
 	}
 	
 	@Transactional
+	public int executeSQL(String sql, Object... params ){
+		Session session = getCurrentSession();
+		Query query = session.createSQLQuery(sql);
+		if(params!=null){
+			for(int i=0;i<params.length;i++){
+				query.setParameter(i, params[i]);
+			}
+		}
+		return query.executeUpdate();
+	}
+	
+	@Transactional
 	@SuppressWarnings("unchecked")
 	public <T> List<T> listByParams(Class<T> clazz,String hql,String[] keys, Object[] values){
 		Session session = getCurrentSession();

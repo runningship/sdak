@@ -43,6 +43,7 @@ public class ModuleManager {
 				
 			}
 		}
+		System.out.println(handlers);
 	}
 
 	public static Handler getHandler(String handlerUrl){
