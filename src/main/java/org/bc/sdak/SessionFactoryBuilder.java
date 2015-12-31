@@ -1,14 +1,15 @@
 package org.bc.sdak;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.persistence.Entity;
 
 import org.bc.sdak.utils.ClassUtil;
+import org.hibernate.Interceptor;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.cfg.NamingStrategy;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
@@ -18,10 +19,10 @@ public class SessionFactoryBuilder {
 	private static Configuration cfg = new Configuration();
 	private static Map<String,String> settings = new HashMap<String,String>();
 	
-	public static void applySettings(Map<String,String> settings , NamingStrategy namingStrategy){
+	public static void applySettings(Map<String,String> settings , Interceptor nterceptor){
 		SessionFactoryBuilder.settings = settings;
-		if(namingStrategy!=null){
-			cfg.setNamingStrategy(namingStrategy);
+		if(nterceptor!=null){
+			cfg.setInterceptor(nterceptor);
 		}
 	}
 	
