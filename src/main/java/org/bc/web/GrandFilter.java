@@ -169,6 +169,7 @@ private void processGException(HttpServletRequest req ,HttpServletResponse resp 
 //		resp.setStatus(400);
 		JSONObject jobj = new JSONObject();
 		jobj.put("return_status", 303);
+		jobj.put("field", ex.getField());
 		if(ex.getType()==PlatformExceptionType.ParameterMissingError){
 			jobj.put("type",PlatformExceptionType.ParameterMissingError.toString());
 			jobj.put("field", ex.getField());
