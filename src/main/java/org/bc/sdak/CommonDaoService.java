@@ -87,11 +87,13 @@ public class CommonDaoService {
 	public int execute(String hql, Object... params ){
 		Session session = getCurrentSession();
 		Query query = session.createQuery(hql);
+		LogUtil.info(hql);
 		if(params!=null){
 			for(int i=0;i<params.length;i++){
 				query.setParameter(i, params[i]);
 			}
 		}
+		
 		return query.executeUpdate();
 	}
 	
